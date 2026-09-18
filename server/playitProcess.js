@@ -50,26 +50,28 @@ class PlayitManager {
   }
 
   isInstalled() {
-    return true; // Native playitd-tray is installed on the system
+    return fs.existsSync(PLAYIT_EXE);
   }
 
   setCustomDomain(domain) {
-    this.customDomain = domain;
-    this.publicAddress = domain;
-    saveSystemSettings({ playitDomain: domain });
-    this.emit('tunnel_found', { address: domain });
+    this.customDomain = domain || '';
+    this.publicAddress = domain || '';
+    saveSystemSettings({ playitDomain: domain || '' });
+    if (domain) {
+      this.emit('tunnel_found', { address: domain });
+    }
     this.emit('status', this.getStatus());
   }
 
   getStatus() {
     return {
-      status: 'RUNNING',
-      isInstalled: true,
+      status: this.status,
+      isInstalled: this.isInstalled(),
       claimUrl: this.claimUrl,
-      publicAddress: this.customDomain || 'jakarta-leopard.tun.ply.gg',
-      customDomain: this.customDomain || 'jakarta-leopard.tun.ply.gg',
-      tunnels: [this.customDomain || 'jakarta-leopard.tun.ply.gg'],
-      downloadProgress: 100,
+      publicAddress: this.publicAddress || this.customDomain || '',
+      customDomain: this.customDomain || '',
+      tunnels: this.tunnels.length > 0 ? this.tunnels : (this.customDomain ? [this.customDomain] : []),
+      downloadProgress: this.downloadProgress,
       logs: this.logs.slice(-50)
     };
   }
@@ -217,7 +219,7 @@ class PlayitManager {
         this.emit('status', this.getStatus());
       }
 
-      // Detect tunnel mappings (e.g. olds-powerpc.tun.ply.gg, my-server.joinmc.link, etc.)
+      // Detect tunnel mappings (e.g. your-server.tun.ply.gg, my-server.joinmc.link, etc.)
       const tunnelMatch = line.match(/([a-zA-Z0-9.-]+\.tun\.ply\.gg(?::\d+)?)/i) ||
                           line.match(/([a-zA-Z0-9.-]+\.ply\.gg(?::\d+)?)/i) ||
                           line.match(/([a-zA-Z0-9.-]+\.joinmc\.link(?::\d+)?)/i) ||

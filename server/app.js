@@ -668,6 +668,10 @@ server.listen(PORT, () => {
   console.log(`====================================================`);
   console.log(`🚀 Minecraft Web Panel running at: http://localhost:${PORT}`);
   console.log(`🧩 Forge, Mod & World Management enabled.`);
-  console.log(`🌐 Playit.gg domain active: ${playitManager.customDomain || 'olds-powerpc.tun.ply.gg'}`);
+  if (playitManager.customDomain) {
+    console.log(`🌐 Playit.gg domain: ${playitManager.customDomain}`);
+  } else {
+    console.log(`🌐 Playit.gg: Hazır (Panelden veya sistem Playit'inden yönetilebilir)`);
+  }
   console.log(`====================================================`);
 });
