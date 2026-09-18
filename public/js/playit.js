@@ -102,14 +102,15 @@ class PlayitUIHandler {
       this.tabStopBtn.style.display = isRunning || isStarting || isClaim ? 'inline-flex' : 'none';
     }
 
-    // IP Address display - ALWAYS show the custom domain cleanly
+    // IP Address display
+    const hasAddress = !!this.currentAddress && this.currentAddress !== 'Tünel Kapalı (Playit Başlatın)';
     if (this.displayIp) {
-      this.displayIp.textContent = this.currentAddress;
-      this.displayIp.style.color = '#6ee7b7';
+      this.displayIp.textContent = hasAddress ? this.currentAddress : 'Tünel Kapalı (Playit Başlatın)';
+      this.displayIp.style.color = hasAddress ? '#6ee7b7' : 'var(--text-muted)';
     }
 
     if (this.addressValue) {
-      this.addressValue.textContent = this.currentAddress;
+      this.addressValue.textContent = hasAddress ? this.currentAddress : 'Tünel Kapalı';
     }
 
     // Claim banner

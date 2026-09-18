@@ -50,7 +50,43 @@ class PlayitManager {
   }
 
   isInstalled() {
-    return fs.existsSync(PLAYIT_EXE);
+    return fs.existsSync(PLAYIT_EXE) || this.getSystemPlayitExe() !== null;
+  }
+
+  getSystemPlayitExe() {
+    const candidates = [
+      PLAYIT_EXE,
+      'C:\\Program Files\\playit_gg\\bin\\playit.exe',
+      'C:\\Program Files\\playit_gg\\bin\\playitd.exe'
+    ];
+    for (const cand of candidates) {
+      if (fs.existsSync(cand)) return cand;
+    }
+    return null;
+  }
+
+  detectSystemTunnelAddress() {
+    const logCandidates = [
+      'C:\\ProgramData\\playit_gg\\logs\\playitd.log',
+      path.join(process.env.LOCALAPPDATA || '', 'playit_gg', 'playitd.log'),
+      path.join(BIN_DIR, 'playit.log')
+    ];
+    for (const logFile of logCandidates) {
+      if (fs.existsSync(logFile)) {
+        try {
+          const content = fs.readFileSync(logFile, 'utf-8');
+          const lines = content.split(/\r?\n/).slice(-200);
+          for (let i = lines.length - 1; i >= 0; i--) {
+            const line = lines[i];
+            const match = line.match(/([a-zA-Z0-9.-]+\.tun\.ply\.gg(?::\d+)?)/i) ||
+                          line.match(/([a-zA-Z0-9.-]+\.ply\.gg(?::\d+)?)/i) ||
+                          line.match(/([a-zA-Z0-9.-]+\.joinmc\.link(?::\d+)?)/i);
+            if (match) return match[1];
+          }
+        } catch (e) {}
+      }
+    }
+    return null;
   }
 
   setCustomDomain(domain) {
@@ -64,13 +100,19 @@ class PlayitManager {
   }
 
   getStatus() {
+    // Check if system has a detected tunnel when no customDomain is manually specified
+    const activeAddress = this.publicAddress || this.customDomain || (this.status === 'RUNNING' ? this.detectSystemTunnelAddress() : '') || '';
+    const activeTunnels = this.tunnels.length > 0 
+      ? this.tunnels 
+      : (activeAddress ? [activeAddress] : []);
+
     return {
       status: this.status,
       isInstalled: this.isInstalled(),
       claimUrl: this.claimUrl,
-      publicAddress: this.publicAddress || this.customDomain || '',
+      publicAddress: activeAddress,
       customDomain: this.customDomain || '',
-      tunnels: this.tunnels.length > 0 ? this.tunnels : (this.customDomain ? [this.customDomain] : []),
+      tunnels: activeTunnels,
       downloadProgress: this.downloadProgress,
       logs: this.logs.slice(-50)
     };
@@ -154,19 +196,21 @@ class PlayitManager {
       throw new Error('Playit process is already running.');
     }
 
-    if (!this.isInstalled()) {
+    let exeToRun = fs.existsSync(PLAYIT_EXE) ? PLAYIT_EXE : this.getSystemPlayitExe();
+    if (!exeToRun) {
       await this.download();
+      exeToRun = PLAYIT_EXE;
     }
 
     this.status = 'STARTING';
     this.claimUrl = null;
     this.publicAddress = null;
     this.tunnels = [];
-    this.addLog('Starting Playit.gg tunnel agent...');
+    this.addLog(`Starting Playit.gg tunnel agent (${path.basename(exeToRun)})...`);
     this.emit('status', this.getStatus());
 
     try {
-      this.process = spawn(PLAYIT_EXE, [], {
+      this.process = spawn(exeToRun, [], {
         cwd: BIN_DIR,
         env: process.env,
         stdio: ['pipe', 'pipe', 'pipe']
