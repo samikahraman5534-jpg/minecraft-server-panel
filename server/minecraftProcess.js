@@ -28,18 +28,13 @@ class MinecraftProcessManager {
   }
 
   detectDefaultJava() {
-    const candidates = [
-      'C:\\Program Files\\Eclipse Adoptium\\jre-21.0.12.101-hotspot\\bin\\java.exe',
-      'C:\\Program Files\\Eclipse Adoptium\\jdk-21.0.12.101-hotspot\\bin\\java.exe',
-      'C:\\Program Files\\Java\\jre1.8.0_503\\bin\\java.exe',
-      'java'
-    ];
-    for (const cand of candidates) {
-      if (cand === 'java' || fs.existsSync(cand)) {
-        return cand;
-      }
+    try {
+      const detected = this.getDetectedJavas();
+      const diskJava = detected.find(j => j !== 'java' && fs.existsSync(j));
+      return diskJava || 'java';
+    } catch {
+      return 'java';
     }
-    return 'java';
   }
 
   getDetectedJavas() {

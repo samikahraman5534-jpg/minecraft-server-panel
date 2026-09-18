@@ -12,7 +12,7 @@ const { readSystemSettings, saveSystemSettings } = require('./configManager');
 class PlayitManager {
   constructor() {
     this.process = null;
-    this.status = 'RUNNING'; // Default to RUNNING since playitd-tray / custom domain is active
+    this.status = 'STOPPED';
     this.claimUrl = null;
     this.tunnels = [];
     
@@ -21,7 +21,7 @@ class PlayitManager {
     this.publicAddress = this.customDomain;
     this.logs = [{
       timestamp: new Date().toISOString(),
-      text: this.customDomain ? `[Playit] Playit servisi aktif. Özel Domain: ${this.customDomain}` : `[Playit] Playit servisi hazır.`
+      text: '[Playit] Servis hazır. Tüneli başlatmak için Başlat butonuna tıklayın.'
     }];
     this.listeners = new Set();
     this.downloadProgress = 100;

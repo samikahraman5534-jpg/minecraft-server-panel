@@ -1,9 +1,9 @@
 {
-  "minRamGb": 4,
-  "maxRamGb": 10,
+  "minRamGb": 2,
+  "maxRamGb": 4,
   "javaPath": "auto",
-  "jvmPreset": "modpack",
-  "customJvmArgs": "-XX:+UseG1GC -XX:+ParallelRefProcEnabled -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions -XX:+DisableExplicitGC -XX:+AlwaysPreTouch -XX:G1NewSizePercent=30 -XX:G1MaxNewSizePercent=40 -XX:G1ReservePercent=20 -XX:InitiatingHeapOccupancyPercent=15",
+  "jvmPreset": "aikar",
+  "customJvmArgs": "-XX:+UseG1GC -XX:+ParallelRefProcEnabled -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions -XX:+DisableExplicitGC -XX:+AlwaysPreTouch",
   "autoRestartOnCrash": false,
   "autoSaveIntervalMin": 5,
   "playitDomain": ""

@@ -57,7 +57,11 @@ class PlayitUIHandler {
   update(data) {
     if (!data) return;
     this.status = data.status || 'STOPPED';
-    const domain = data.customDomain || data.publicAddress || (data.tunnels && data.tunnels[0]) || 'jakarta-leopard.tun.ply.gg';
+    const isRunning = this.status === 'RUNNING';
+    const isStarting = this.status === 'STARTING' || this.status === 'DOWNLOADING';
+    const isClaim = this.status === 'NEEDS_CLAIM';
+
+    const domain = data.customDomain || data.publicAddress || (data.tunnels && data.tunnels[0]) || (isRunning ? 'Adres alınıyor...' : 'Tünel Kapalı (Playit Başlatın)');
     this.currentAddress = domain;
 
     // File status
@@ -67,28 +71,24 @@ class PlayitUIHandler {
     }
 
     // Status Pills
-    const isRunning = this.status === 'RUNNING';
-    const isStarting = this.status === 'STARTING' || this.status === 'DOWNLOADING';
-    const isClaim = this.status === 'NEEDS_CLAIM';
-
-    const pillText = isRunning ? '🟢 Bağlantı Hazır' : (isClaim ? 'Eşleme Bekliyor' : (isStarting ? 'Başlatılıyor...' : '🟢 Bağlantı Hazır'));
-    const pillClass = isRunning ? 'pill-online' : (isClaim ? 'pill-warn' : (isStarting ? 'pill-warn' : 'pill-online'));
+    const pillText = isRunning ? '🟢 Aktif' : (isClaim ? 'Eşleme Bekliyor' : (isStarting ? 'Başlatılıyor...' : '🔴 Kapalı'));
+    const pillClass = isRunning ? 'pill-online' : (isClaim ? 'pill-warn' : (isStarting ? 'pill-warn' : 'pill-offline'));
 
     if (this.heroStatusPill) {
       this.heroStatusPill.textContent = pillText;
       this.heroStatusPill.className = `pill ${pillClass}`;
     }
     if (this.tabStatusPill) {
-      this.tabStatusPill.textContent = isRunning ? 'Tünel Aktif' : (isClaim ? 'Eşleme Bekliyor' : (isStarting ? 'Başlatılıyor...' : 'Tünel Hazır'));
+      this.tabStatusPill.textContent = isRunning ? 'Tünel Aktif' : (isClaim ? 'Eşleme Bekliyor' : (isStarting ? 'Başlatılıyor...' : 'Tünel Kapalı'));
       this.tabStatusPill.className = `pill ${pillClass}`;
     }
     if (this.navPill) {
-      this.navPill.textContent = isRunning ? 'Online' : (isClaim ? 'Claim' : 'Hazır');
+      this.navPill.textContent = isRunning ? 'Online' : (isClaim ? 'Claim' : 'Offline');
       this.navPill.className = `playit-mini-pill ${isRunning ? 'active' : ''}`;
     }
     if (this.stateTxt) {
-      this.stateTxt.textContent = isRunning ? 'Otomatik Aktif' : 'Hazır';
-      this.stateTxt.style.color = '#6ee7b7';
+      this.stateTxt.textContent = isRunning ? 'Aktif' : (isStarting ? 'Başlatılıyor...' : 'Kapalı');
+      this.stateTxt.style.color = isRunning ? '#6ee7b7' : 'var(--text-muted)';
     }
 
     // Toggle button text (in Playit tab)
