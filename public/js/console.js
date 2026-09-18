@@ -1,0 +1,183 @@
+class ConsoleManager {
+  constructor() {
+    this.output = document.getElementById('console-output');
+    this.input = document.getElementById('console-input');
+    this.form = document.getElementById('console-form');
+    this.autoScrollCheck = document.getElementById('console-autoscroll');
+    this.clearBtn = document.getElementById('btn-clear-console');
+    this.downloadBtn = document.getElementById('btn-download-logs');
+    this.logBadge = document.getElementById('log-count-badge');
+    
+    this.history = [];
+    this.historyIndex = -1;
+    this.maxLines = 1000;
+    this.logCount = 0;
+
+    this.init();
+  }
+
+  init() {
+    if (this.form) {
+      this.form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        this.sendCommand();
+      });
+    }
+
+    if (this.input) {
+      this.input.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          this.navigateHistory(-1);
+        } else if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          this.navigateHistory(1);
+        }
+      });
+    }
+
+    if (this.clearBtn) {
+      this.clearBtn.addEventListener('click', () => this.clear());
+    }
+
+    if (this.downloadBtn) {
+      this.downloadBtn.addEventListener('click', () => this.downloadLogs());
+    }
+
+    // Macro buttons
+    document.querySelectorAll('.macro-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const cmd = btn.getAttribute('data-cmd');
+        if (cmd.endsWith(' ')) {
+          this.input.value = cmd;
+          this.input.focus();
+        } else {
+          this.input.value = cmd;
+          this.sendCommand();
+        }
+      });
+    });
+  }
+
+  appendLine(logObj) {
+    if (!this.output) return;
+    const text = typeof logObj === 'string' ? logObj : logObj.text;
+    if (!text) return;
+
+    const lineElem = document.createElement('div');
+    lineElem.className = 'console-line ' + this.classifyLine(text);
+    lineElem.innerHTML = this.formatMinecraftColors(this.escapeHtml(text));
+
+    this.output.appendChild(lineElem);
+    this.logCount++;
+    if (this.logBadge) this.logBadge.textContent = this.logCount;
+
+    // Prune old lines if exceeding maxLines
+    while (this.output.children.length > this.maxLines) {
+      this.output.removeChild(this.output.firstChild);
+    }
+
+    if (this.autoScrollCheck && this.autoScrollCheck.checked) {
+      this.output.scrollTop = this.output.scrollHeight;
+    }
+  }
+
+  classifyLine(text) {
+    const lower = text.toLowerCase();
+    if (lower.includes('error') || lower.includes('exception') || lower.includes('fatal')) return 'error';
+    if (lower.includes('warn')) return 'warn';
+    if (lower.includes('joined the game') || lower.includes('left the game')) return 'player';
+    if (lower.includes('info')) return 'info';
+    if (lower.startsWith('>')) return 'system-line';
+    return '';
+  }
+
+  formatMinecraftColors(str) {
+    const mcColorMap = {
+      '§0': '#000000', '§1': '#0000AA', '§2': '#00AA00', '§3': '#00AAAA',
+      '§4': '#AA0000', '§5': '#AA00AA', '§6': '#FFAA00', '§7': '#AAAAAA',
+      '§8': '#555555', '§9': '#5555FF', '§a': '#55FF55', '§b': '#55FFFF',
+      '§c': '#FF5555', '§d': '#FF55FF', '§e': '#FFFF55', '§f': '#FFFFFF',
+      '&0': '#000000', '&1': '#0000AA', '&2': '#00AA00', '&3': '#00AAAA',
+      '&4': '#AA0000', '&5': '#AA00AA', '&6': '#FFAA00', '&7': '#AAAAAA',
+      '&8': '#555555', '&9': '#5555FF', '&a': '#55FF55', '&b': '#55FFFF',
+      '&c': '#FF5555', '&d': '#FF55FF', '&e': '#FFFF55', '&f': '#FFFFFF'
+    };
+
+    let formatted = str;
+    for (const [code, hex] of Object.entries(mcColorMap)) {
+      const reg = new RegExp(code, 'g');
+      formatted = formatted.replace(reg, `<span style="color: ${hex}; font-weight: 500;">`);
+    }
+    // Close spans for §r / &r
+    formatted = formatted.replace(/(§r|&r)/g, '</span>');
+    return formatted;
+  }
+
+  escapeHtml(str) {
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
+  sendCommand() {
+    if (!this.input) return;
+    const cmd = this.input.value.trim();
+    if (!cmd) return;
+
+    this.history.push(cmd);
+    this.historyIndex = this.history.length;
+
+    if (window.appWs && window.appWs.readyState === WebSocket.OPEN) {
+      window.appWs.send(JSON.stringify({ type: 'command', command: cmd }));
+    } else {
+      fetch('/api/server/command', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ command: cmd })
+      }).catch((err) => {
+        this.appendLine(`[WebPanel Error] Komut gönderilemedi: ${err.message}`);
+      });
+    }
+
+    this.input.value = '';
+  }
+
+  navigateHistory(direction) {
+    if (this.history.length === 0) return;
+    this.historyIndex += direction;
+    if (this.historyIndex < 0) this.historyIndex = 0;
+    if (this.historyIndex > this.history.length) this.historyIndex = this.history.length;
+
+    if (this.historyIndex === this.history.length) {
+      this.input.value = '';
+    } else {
+      this.input.value = this.history[this.historyIndex];
+    }
+  }
+
+  clear() {
+    if (this.output) {
+      this.output.innerHTML = '<div class="console-line system-line">[WebPanel] Konsol temizlendi.</div>';
+      this.logCount = 0;
+      if (this.logBadge) this.logBadge.textContent = '0';
+    }
+  }
+
+  downloadLogs() {
+    if (!this.output) return;
+    const text = this.output.innerText;
+    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `minecraft-console-${new Date().toISOString().slice(0, 19)}.log`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+}
+
+window.consoleManager = new ConsoleManager();

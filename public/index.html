@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Sami Kahraman">
+  <title>🌸 Sakura Minecraft Server & Web Panel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <!-- Sakura Tree Top Right Decor -->
+  <div class="sakura-tree-topright"></div>
+
+  <!-- Background Glow Accents -->
+  <div class="bg-glow glow-1"></div>
+  <div class="bg-glow glow-2"></div>
+  <div class="bg-glow glow-3"></div>
+
+  <div class="app-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="2" width="20" height="20" rx="4" fill="#10b981" fill-opacity="0.2" stroke="#10b981" />
+            <path d="M7 8h10M7 12h10M7 16h6" stroke="#10b981" stroke-linecap="round" />
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h2>MC Manager</h2>
+          <span class="brand-sub">Forge & Playit.gg Web Panel</span>
+        </div>
+      </div>
+
+      <!-- Quick Server Status Badge in Sidebar -->
+      <div class="sidebar-status-box" id="sidebar-status-box">
+        <div class="status-indicator-dot" id="server-status-dot"></div>
+        <div class="status-info">
+          <span class="status-title">Sunucu Durumu</span>
+          <span class="status-value" id="server-status-text">KONTROL EDİLİYOR...</span>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+        <button class="nav-item active" data-tab="dashboard">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+          <span>Genel Bakış</span>
+        </button>
+        <button class="nav-item" data-tab="console">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+          <span>Canlı Konsol</span>
+          <span class="nav-badge" id="log-count-badge">0</span>
+        </button>
+        <button class="nav-item" data-tab="playit">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          <span>Playit.gg Tünel</span>
+          <span class="playit-mini-pill" id="playit-nav-pill">Offline</span>
+        </button>
+        <button class="nav-item" data-tab="mods">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+          <span>Mod Yöneticisi</span>
+          <span class="nav-badge highlight-sub" id="mod-count-badge">0</span>
+        </button>
+        <button class="nav-item" data-tab="worlds">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+          <span>Dünya Yöneticisi</span>
+        </button>
+        <button class="nav-item" data-tab="installer">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <span>Sürüm & Kurulum</span>
+        </button>
+        <button class="nav-item" data-tab="properties">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          <span>Ayarlar & Config</span>
+        </button>
+        <button class="nav-item" data-tab="players">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <span>Oyuncu Yönetimi</span>
+        </button>
+        <button class="nav-item" data-tab="files">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+          <span>Dosyalar & Eklentiler</span>
+        </button>
+        <button class="nav-item" data-tab="backups">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          <span>Dünya Yedekleri</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <span class="version-label">v1.1.0 Forge & Mod Manager</span>
+        <span class="creator-label" style="display:block; font-size: 0.74rem; color: var(--text-muted); margin-top: 4px;">Geliştirici: <strong style="color: var(--text-main);">Sami Kahraman</strong></span>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <!-- Top Header Controls -->
+      <header class="top-header">
+        <div class="header-left">
+          <h1 id="page-title">Genel Bakış</h1>
+          <p id="page-subtitle" class="header-subtitle">Minecraft sunucunuzu ve Playit tünelinizi yönetin</p>
+        </div>
+
+        <div class="header-actions">
+          <button id="btn-start-server" class="btn btn-primary btn-glow">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            <span>Sunucuyu Başlat</span>
+          </button>
+          <button id="btn-stop-server" class="btn btn-warning" style="display: none;">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
+            <span>Durdur</span>
+          </button>
+          <button id="btn-restart-server" class="btn btn-outline" style="display: none;">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+            <span>Yeniden Başlat</span>
+          </button>
+          <button id="btn-kill-server" class="btn btn-danger" style="display: none;" title="Zorla Kapat (Kill)">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- TAB 1: DASHBOARD -->
+      <section id="tab-dashboard" class="tab-content active">
+        <!-- Server Connection Domain Card (Auto-Managed) -->
+        <div class="card playit-hero-card">
+          <div class="playit-hero-header">
+            <div class="playit-title-group">
+              <div class="playit-badge-icon">🌐</div>
+              <div>
+                <h3>Sunucu Bağlantı Adresi (Domain)</h3>
+                <p>Arkadaşlarınız port açmaya gerek kalmadan doğrudan bu adres ile oyuna katılabilir</p>
+              </div>
+            </div>
+            <div class="playit-actions-header">
+              <span id="playit-hero-status-pill" class="pill pill-online">🟢 Bağlantı Hazır</span>
+            </div>
+          </div>
+
+          <!-- Claim Link Notice (When unlinked) -->
+          <div id="playit-claim-banner" class="claim-banner" style="display: none;">
+            <div class="claim-info">
+              <span class="claim-icon">🔗</span>
+              <div>
+                <strong>Playit.gg Hesabınızı Eşleyin!</strong>
+                <p>Sunucunuza kalıcı bir IP adresi atamak için tek seferlik bağlantıya tıklayın.</p>
+              </div>
+            </div>
+            <a id="playit-claim-link-btn" href="#" target="_blank" class="btn btn-sm btn-primary">Hesaba Bağla ↗</a>
+          </div>
+
+          <!-- Server Public Address Box -->
+          <div class="server-ip-box">
+            <div class="ip-info-label">ARKADAŞLARINIZLA PAYLAŞILACAK SUNUCU IP ADRESİ:</div>
+            <div class="ip-display-row">
+              <div class="ip-text-wrap">
+                <span id="display-server-ip" class="ip-value">jakarta-leopard.tun.ply.gg</span>
+              </div>
+              <button id="btn-copy-ip" class="btn btn-primary" title="Adresi Kopyala">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                <span>IP Kopyala</span>
+              </button>
+            </div>
+            <div class="ip-meta">
+              <span>Port: <strong>25565</strong></span>
+              <span>Yerel IP: <strong>localhost:25565</strong></span>
+              <span id="playit-ping-badge">Durum: <strong id="playit-state-txt" style="color: #6ee7b7;">Otomatik Aktif</strong></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Metric Stat Cards -->
+        <div class="stats-grid">
+          <div class="card stat-card">
+            <div class="stat-header">
+              <span class="stat-name">RAM Kullanımı</span>
+              <div class="stat-icon ram-icon">📊</div>
+            </div>
+            <div class="stat-value" id="stat-ram">0 MB / 4.0 GB</div>
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill" id="ram-progress-fill" style="width: 0%;"></div>
+            </div>
+          </div>
+
+          <div class="card stat-card">
+            <div class="stat-header">
+              <span class="stat-name">İşlemci (CPU)</span>
+              <div class="stat-icon cpu-icon">⚡</div>
+            </div>
+            <div class="stat-value" id="stat-cpu">0%</div>
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill cpu-fill" id="cpu-progress-fill" style="width: 0%;"></div>
+            </div>
+          </div>
+
+          <div class="card stat-card">
+            <div class="stat-header">
+              <span class="stat-name">Çevrimiçi Oyuncular</span>
+              <div class="stat-icon players-icon">🎮</div>
+            </div>
+            <div class="stat-value" id="stat-players">0 / 20</div>
+            <div class="stat-subtext" id="stat-uptime">Açık Kalma: 0s</div>
+          </div>
+
+          <div class="card stat-card">
+            <div class="stat-header">
+              <span class="stat-name">Sunucu Çekirdeği</span>
+              <div class="stat-icon ver-icon">📦</div>
+            </div>
+            <div class="stat-value" id="stat-version-info">Yüklü Değil</div>
+            <div class="stat-subtext" id="stat-jar-size">server.jar</div>
+          </div>
+        </div>
+
+        <!-- Split Grid: Quick Settings & Online Players -->
+        <div class="dashboard-split-grid">
+          <!-- Online Players Card -->
+          <div class="card player-list-card">
+            <div class="card-title-row">
+              <h4>Aktif Oyuncular</h4>
+              <span class="badge" id="player-count-badge">0 Oyuncu</span>
+            </div>
+            <div class="player-list-container" id="dashboard-players-list">
+              <div class="empty-state-small">Şu anda sunucuda oyuncu bulunmuyor.</div>
+            </div>
+          </div>
+
+          <!-- Quick Settings Card -->
+          <div class="card quick-settings-card">
+            <div class="card-title-row">
+              <h4>Hızlı Sunucu Ayarları</h4>
+              <button id="btn-save-quick-settings" class="btn btn-sm btn-primary">Kaydet</button>
+            </div>
+            <div class="quick-settings-form">
+              <div class="setting-row">
+                <div class="setting-label-col">
+                  <strong>Korsan / Crack Girişi (Online Mode)</strong>
+                  <span class="setting-desc">TLauncher veya orijinal olmayan Minecraft oyuncularının girmesi için kapalı (False) olmalıdır.</span>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" id="quick-online-mode">
+                  <span class="slider"></span>
+                </label>
+              </div>
+
+              <div class="setting-row">
+                <div class="setting-label-col">
+                  <strong>PvP (Oyuncu Savaşı)</strong>
+                  <span class="setting-desc">Oyuncuların birbirine vurabilmesi.</span>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" id="quick-pvp" checked>
+                  <span class="slider"></span>
+                </label>
+              </div>
+
+              <div class="setting-row">
+                <div class="setting-label-col">
+                  <strong>Oyun Modu</strong>
+                </div>
+                <select id="quick-gamemode" class="form-input form-select">
+                  <option value="survival">Hayatta Kalma (Survival)</option>
+                  <option value="creative">Yaratıcı (Creative)</option>
+                  <option value="adventure">Macera (Adventure)</option>
+                  <option value="spectator">İzleyici (Spectator)</option>
+                </select>
+              </div>
+
+              <div class="setting-row">
+                <div class="setting-label-col">
+                  <strong>Zorluk Derecesi</strong>
+                </div>
+                <select id="quick-difficulty" class="form-input form-select">
+                  <option value="peaceful">Barışçıl (Peaceful)</option>
+                  <option value="easy">Kolay (Easy)</option>
+                  <option value="normal" selected>Normal</option>
+                  <option value="hard">Zor (Hard)</option>
+                </select>
+              </div>
+
+              <div class="setting-row">
+                <div class="setting-label-col">
+                  <strong>Maksimum Oyuncu</strong>
+                </div>
+                <input type="number" id="quick-max-players" class="form-input" value="20" min="1" max="100">
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: LIVE CONSOLE -->
+      <section id="tab-console" class="tab-content">
+        <div class="card console-card">
+          <div class="console-header">
+            <div class="console-title-group">
+              <span class="terminal-dot red"></span>
+              <span class="terminal-dot yellow"></span>
+              <span class="terminal-dot green"></span>
+              <span class="console-title-text">minecraft@server:~$</span>
+            </div>
+            <div class="console-controls">
+              <label class="checkbox-label">
+                <input type="checkbox" id="console-autoscroll" checked>
+                <span>Otomatik Kaydır</span>
+              </label>
+              <button id="btn-clear-console" class="btn btn-sm btn-outline">Temizle</button>
+              <button id="btn-download-logs" class="btn btn-sm btn-outline">Logları İndir</button>
+            </div>
+          </div>
+
+          <div class="console-body" id="console-output">
+            <div class="console-line system-line">[WebPanel] Canlı konsol bağlandı. Loglar bekleniyor...</div>
+          </div>
+
+          <!-- Quick Command Shortcuts -->
+          <div class="console-shortcuts">
+            <span class="shortcut-label">Hızlı Komutlar:</span>
+            <button class="macro-btn" data-cmd="op ">+ OP Yap</button>
+            <button class="macro-btn" data-cmd="gamemode creative @a">Yaratıcı Mod</button>
+            <button class="macro-btn" data-cmd="gamemode survival @a">Hayatta Kalma</button>
+            <button class="macro-btn" data-cmd="time set day">Gündüz Yap</button>
+            <button class="macro-btn" data-cmd="weather clear">Hava Durumunu Aç</button>
+            <button class="macro-btn" data-cmd="save-all">Dünyayı Kaydet</button>
+            <button class="macro-btn" data-cmd="whitelist on">Whitelist Aç</button>
+          </div>
+
+          <!-- Command Input Row -->
+          <form id="console-form" class="console-input-row">
+            <span class="prompt-symbol">&gt;</span>
+            <input type="text" id="console-input" class="console-input" placeholder="Sunucu komutu girin (Örn: op Nick, gamemode creative, say Merhaba)..." autocomplete="off">
+            <button type="submit" class="btn btn-primary">Gönder</button>
+          </form>
+        </div>
+      </section>
+
+      <!-- TAB 3: PLAYIT.GG DEDICATED -->
+      <section id="tab-playit" class="tab-content">
+        <div class="playit-layout-grid">
+          <div class="card playit-control-card">
+            <div class="card-title-row">
+              <h3>Playit.gg Tünel Yönetimi</h3>
+              <span id="playit-tab-status-pill" class="pill pill-offline">Kapalı</span>
+            </div>
+
+            <p class="section-desc">
+              Playit.gg, modeminizden port açmadan veya IP adresinizi ifşa etmeden arkadaşlarınızın sunucunuza bağlanmasını sağlar.
+            </p>
+
+            <div class="playit-main-actions">
+              <button id="btn-playit-tab-start" class="btn btn-primary">Tüneli Başlat</button>
+              <button id="btn-playit-tab-stop" class="btn btn-danger" style="display: none;">Tüneli Durdur</button>
+              <button id="btn-playit-download" class="btn btn-outline">Playit.exe Yeniden İndir</button>
+              <button id="btn-playit-reset" class="btn btn-outline" title="Giriş anahtarını sıfırla">Hesap Eşlemesini Sıfırla</button>
+            </div>
+
+            <!-- Download Progress -->
+            <div id="playit-download-box" class="download-progress-wrap" style="display: none;">
+              <div class="download-info-row">
+                <span>Playit.exe İndiriliyor...</span>
+                <span id="playit-dl-percent">0%</span>
+              </div>
+              <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="playit-dl-bar" style="width: 0%;"></div>
+              </div>
+            </div>
+
+            <div class="playit-status-details">
+              <div class="detail-item">
+                <span class="detail-label">Playit Dosyası:</span>
+                <span class="detail-value" id="playit-file-status">Kontrol ediliyor...</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Aktif Tünel Adresi:</span>
+                <span class="detail-value highlight" id="playit-address-value">-</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Eşleme Durumu:</span>
+                <span class="detail-value" id="playit-claim-status">-</span>
+              </div>
+            </div>
+
+            <div class="guide-box">
+              <h4>Nasıl Kullanılır?</h4>
+              <ol>
+                <li><strong>"Tüneli Başlat"</strong> butonuna basın.</li>
+                <li>İlk açılışta yukarıda çıkan <strong>Eşleme Linkine (Claim Link)</strong> tıklayın ve Playit hesabınıza giriş yapın.</li>
+                <li>Playit panelinde sunucunuz için <strong>Minecraft Java Tüneli</strong> oluşturulacaktır (Örn: <code>xyz.joinmc.link</code>).</li>
+                <li>Oluşan adresi kopyalayıp arkadaşlarınıza verin, doğrudan bağlansınlar!</li>
+              </ol>
+            </div>
+          </div>
+
+          <!-- Playit Live Console -->
+          <div class="card playit-console-card">
+            <div class="card-title-row">
+              <h4>Playit.gg Konsol Çıktısı</h4>
+              <button id="btn-clear-playit-console" class="btn btn-sm btn-outline">Temizle</button>
+            </div>
+            <div class="console-body playit-console-body" id="playit-console-output">
+              <div class="console-line system-line">[Playit] Ajan hazır.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 4: MOD MANAGER -->
+      <section id="tab-mods" class="tab-content">
+        <div class="card mods-main-card">
+          <div class="mods-nav-tabs">
+            <button class="mod-subtab active" data-subtab="installed">📁 Yüklü Modlar</button>
+            <button class="mod-subtab" data-subtab="modrinth">🔍 Modrinth Mod Mağazası (Online İndir)</button>
+          </div>
+
+          <!-- Subtab 1: Installed Mods -->
+          <div id="mods-installed-panel" class="subtab-panel active">
+            <!-- Drag & Drop Zone -->
+            <div class="mod-dropzone" id="mod-dropzone">
+              <div class="dropzone-icon">📥</div>
+              <div class="dropzone-text">
+                <strong>Mod (.jar) Dosyalarını Buraya Sürükleyip Bırakın</strong>
+                <p>veya bilgisayarınızdan seçmek için <span class="dropzone-browse">tıklayın</span></p>
+              </div>
+              <input type="file" id="mod-dropzone-input" accept=".jar" multiple style="display: none;">
+            </div>
+
+            <div class="mods-header-actions">
+              <div>
+                <h4>Sunucudaki Modlar</h4>
+                <p class="section-desc">Modları silmeden tek tıkla Açıp / Kapatabilirsiniz (.jar.disabled).</p>
+              </div>
+              <div class="mods-actions-right">
+                <label class="btn btn-primary file-upload-btn">
+                  <input type="file" id="mod-upload-input" accept=".jar" multiple style="display: none;">
+                  <span>+ Mod (.jar) Seç</span>
+                </label>
+                <button id="btn-refresh-mods" class="btn btn-outline">Yenile</button>
+              </div>
+            </div>
+
+            <div class="mods-list-grid" id="installed-mods-list">
+              <div class="empty-state-small">Henüz mod yüklenmedi. Yukarıdaki alana mod sürükleyip bırakabilir veya Modrinth mağazasından indirebilirsiniz.</div>
+            </div>
+          </div>
+
+          <!-- Subtab 2: Modrinth Search & 1-Click Install -->
+          <div id="mods-modrinth-panel" class="subtab-panel">
+            <div class="modrinth-search-bar">
+              <div class="search-input-wrap">
+                <input type="text" id="modrinth-search-input" class="form-input" placeholder="Mod ara (Örn: JEI, JourneyMap, Biomes O Plenty, Create, Sodium, Waystones)...">
+              </div>
+              <select id="modrinth-loader-select" class="form-input form-select" style="max-width: 160px;">
+                <option value="forge" selected>Forge Modları</option>
+                <option value="fabric">Fabric Modları</option>
+              </select>
+              <button id="btn-search-modrinth" class="btn btn-primary">Mod Ara</button>
+            </div>
+
+            <div class="modrinth-results-grid" id="modrinth-results">
+              <div class="empty-state-small">Aramak istediğiniz mod adını yazın veya popüler modlara göz atın.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 5: WORLD MANAGER -->
+      <section id="tab-worlds" class="tab-content">
+        <!-- Active World Banner -->
+        <div class="card active-world-card">
+          <div class="active-world-header">
+            <div class="world-icon-badge">🗺️</div>
+            <div>
+              <span class="active-tag">ŞU ANDA AKTİF OLAN DÜNYA</span>
+              <h2 id="current-active-world-name" class="world-title-hero">world</h2>
+              <p class="world-meta-info">Sunucu başlatıldığında bu dünya yüklenecektir (`level-name`).</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="worlds-layout-grid">
+          <!-- Worlds List -->
+          <div class="card worlds-list-card">
+            <div class="card-title-row">
+              <h3>Mevcut Dünyalar / Haritalar</h3>
+              <button id="btn-refresh-worlds" class="btn btn-sm btn-outline">Yenile</button>
+            </div>
+            <div class="worlds-grid-container" id="worlds-list-container">
+              <div class="empty-state-small">Dünyalar taranıyor...</div>
+            </div>
+          </div>
+
+          <!-- Create & Upload Forms Side -->
+          <div class="worlds-sidebar-forms">
+            <!-- Create New World Card -->
+            <div class="card form-subcard">
+              <div class="card-title-row">
+                <h4>✨ Yeni Dünya Oluştur</h4>
+              </div>
+              <form id="form-create-world">
+                <div class="form-group">
+                  <label class="form-label" for="new-world-name">Dünya Adı:</label>
+                  <input type="text" id="new-world-name" class="form-input" placeholder="Örn: survival_world, maden_haritasi" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="new-world-seed">Tohum (Seed - İsteğe Bağlı):</label>
+                  <input type="text" id="new-world-seed" class="form-input" placeholder="Boş bırakılırsa rastgele oluşur">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="new-world-type">Dünya Tipi:</label>
+                  <select id="new-world-type" class="form-input form-select">
+                    <option value="minecraft:normal" selected>Normal (Varsayılan)</option>
+                    <option value="minecraft:flat">Düz Dünya (Flat)</option>
+                    <option value="minecraft:large_biomes">Geniş Biyomlar (Large Biomes)</option>
+                    <option value="minecraft:amplified">Yükseltilmiş (Amplified Dağlar)</option>
+                  </select>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Dünyayı Oluştur & Aktif Yap</button>
+              </form>
+            </div>
+
+            <!-- Upload World ZIP Card -->
+            <div class="card form-subcard">
+              <div class="card-title-row">
+                <h4>📥 Dışarıdan Harita / ZIP Yükle</h4>
+              </div>
+              <p class="section-desc">İnternetten indirdiğiniz Minecraft harita `.zip` dosyasını doğrudan yükleyin.</p>
+              <form id="form-upload-world">
+                <div class="form-group">
+                  <label class="form-label" for="upload-world-name">Harita Adı:</label>
+                  <input type="text" id="upload-world-name" class="form-input" placeholder="Örn: skyblock_v2, parkur_map">
+                </div>
+                <div class="form-group">
+                  <input type="file" id="upload-world-zip-input" accept=".zip" class="form-input" required>
+                </div>
+                <button type="submit" class="btn btn-accent" style="width: 100%;">Harita ZIP'ini Yükle ve Aç</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 6: INSTALLER -->
+      <section id="tab-installer" class="tab-content">
+        <div class="installer-grid">
+          <!-- Install Version Card -->
+          <div class="card installer-card">
+            <div class="card-title-row">
+              <h3>Minecraft Sunucu & Çekirdek Kurulumu</h3>
+            </div>
+            <p class="section-desc">
+              Oynamak istediğiniz çekirdeği seçin. Forge, Fabric, Purpur veya Vanilla tek tıkla kurulabilir.
+            </p>
+
+            <div class="form-group">
+              <label class="form-label">Sunucu Çekirdeği (Yazılım):</label>
+              <div class="core-selector-cards">
+                <label class="core-card" data-core="forge">
+                  <input type="radio" name="server-type" value="forge">
+                  <div class="core-card-content">
+                    <div class="core-title">Forge (Mod Paketi Destekli) 🔥</div>
+                    <div class="core-desc">Tüm Forge modlarını kurup oynamak için resmi Forge yükleyicisi.</div>
+                  </div>
+                </label>
+
+                <label class="core-card active" data-core="purpur">
+                  <input type="radio" name="server-type" value="purpur" checked>
+                  <div class="core-card-content">
+                    <div class="core-title">Purpur / Paper (Pluginli) ⚡</div>
+                    <div class="core-desc">En yüksek performans, optimize TPS ve tüm Spigot/Bukkit eklenti desteği.</div>
+                  </div>
+                </label>
+
+                <label class="core-card" data-core="fabric">
+                  <input type="radio" name="server-type" value="fabric">
+                  <div class="core-card-content">
+                    <div class="core-title">Fabric (Hafif Modlu) 🚀</div>
+                    <div class="core-desc">Sodium, Iris gibi hafif ve performanslı Fabric modları için.</div>
+                  </div>
+                </label>
+
+                <label class="core-card" data-core="vanilla">
+                  <input type="radio" name="server-type" value="vanilla">
+                  <div class="core-card-content">
+                    <div class="core-title">Vanilla Minecraft 📦</div>
+                    <div class="core-desc">Mojang'ın sade, orijinal sunucu çekirdeği.</div>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="select-mc-version">Minecraft Sürümü:</label>
+              <select id="select-mc-version" class="form-input form-select">
+                <option value="1.20.4">1.20.4</option>
+                <option value="1.20.1" selected>1.20.1 (Modlar İçin En Popüler)</option>
+                <option value="1.19.2">1.19.2</option>
+                <option value="1.16.5">1.16.5 (Geniş Mod Desteği)</option>
+                <option value="1.12.2">1.12.2 (Klasik Modlar)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="select-java-path">Java Çalışma Alanı (Java Runtime):</label>
+              <select id="select-java-path" class="form-input form-select">
+                <option value="auto">Otomatik Algıla (Önerilen Java 21)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <div class="label-with-value">
+                <label class="form-label">Sunucu RAM Miktarı:</label>
+                <span id="ram-slider-value" class="highlight-badge">4 GB RAM</span>
+              </div>
+              <input type="range" id="ram-slider" min="1" max="16" value="4" class="slider-input">
+              <div class="slider-ticks">
+                <span>1 GB</span>
+                <span>4 GB</span>
+                <span>8 GB</span>
+                <span>16 GB</span>
+              </div>
+            </div>
+
+            <!-- Install Download Progress -->
+            <div id="install-progress-box" class="download-progress-wrap" style="display: none;">
+              <div class="download-info-row">
+                <span id="install-status-text">Sunucu JAR indiriliyor...</span>
+                <span id="install-percent-text">0%</span>
+              </div>
+              <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="install-progress-bar" style="width: 0%;"></div>
+              </div>
+            </div>
+
+            <div class="installer-actions">
+              <button id="btn-install-server" class="btn btn-primary btn-lg">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                <span>Sunucuyu İndir ve Kur</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Current Server Info Card -->
+          <div class="card server-info-card">
+            <div class="card-title-row">
+              <h4>Mevcut Sunucu Durumu</h4>
+            </div>
+            <div class="info-list">
+              <div class="info-item">
+                <span class="info-label">Sunucu Dosyası:</span>
+                <span class="info-val" id="info-jar-exists">Kontrol ediliyor...</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Sunucu Türü:</span>
+                <span class="info-val highlight" id="info-jar-type">Purpur / Paper</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">EULA Anlaşması:</span>
+                <span class="info-val text-success">✓ Otomatik Kabul Edildi (eula=true)</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Sunucu Dizini:</span>
+                <span class="info-val code-font">server_data/</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 7: PROPERTIES & CONFIG -->
+      <section id="tab-properties" class="tab-content">
+        <div class="card properties-card">
+          <div class="properties-nav-tabs">
+            <button class="prop-subtab active" data-subtab="visual">🎮 Oyun & Sunucu Ayarları</button>
+            <button class="prop-subtab" data-subtab="performance">⚡ RAM & Java & Performans</button>
+            <button class="prop-subtab" data-subtab="forge-jvm">🛠️ Forge JVM (user_jvm_args.txt)</button>
+            <button class="prop-subtab" data-subtab="raw">📝 server.properties (Ham Metin)</button>
+          </div>
+
+          <!-- Subtab 1: Visual Gameplay Settings -->
+          <div id="prop-visual-panel" class="subtab-panel active">
+            <form id="form-visual-properties" class="properties-grid-form">
+              <div class="form-group full-width">
+                <label class="form-label" for="prop-motd">Sunucu Başlığı (MOTD):</label>
+                <input type="text" id="prop-motd" class="form-input" placeholder="Sunucu listesinde görünecek renkli yazı (&a, &b kodları desteklenir)...">
+                <div class="motd-preview-box">
+                  <span class="motd-preview-label">Canlı Önizleme:</span>
+                  <div id="motd-preview" class="motd-preview-text">A Minecraft Server</div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="prop-port">Sunucu Portu (Varsayılan 25565):</label>
+                <input type="number" id="prop-port" class="form-input" value="25565">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="prop-max-players">Maksimum Oyuncu Kapasitesi:</label>
+                <input type="number" id="prop-max-players" class="form-input" value="20" min="1" max="1000">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="prop-gamemode">Varsayılan Oyun Modu:</label>
+                <select id="prop-gamemode" class="form-input form-select">
+                  <option value="survival">Survival (Hayatta Kalma)</option>
+                  <option value="creative">Creative (Yaratıcı)</option>
+                  <option value="adventure">Adventure (Macera)</option>
+                  <option value="spectator">Spectator (İzleyici)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="prop-difficulty">Zorluk Seviyesi:</label>
+                <select id="prop-difficulty" class="form-input form-select">
+                  <option value="peaceful">Peaceful (Barışçıl)</option>
+                  <option value="easy">Easy (Kolay)</option>
+                  <option value="normal" selected>Normal</option>
+                  <option value="hard">Hard (Zor)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="prop-view-distance">Görüş Mesafesi (View Distance Chunk: 4-32):</label>
+                <input type="number" id="prop-view-distance" class="form-input" value="10" min="4" max="32">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="prop-simulation-distance">Simülasyon Mesafesi (Simulation Distance):</label>
+                <input type="number" id="prop-simulation-distance" class="form-input" value="10" min="3" max="32">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="prop-spawn-protection">Doğuş Koruması Alanı (Spawn Protection Blok):</label>
+                <input type="number" id="prop-spawn-protection" class="form-input" value="16" min="0" max="64">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="prop-level-seed">Dünya Tohumu (Seed):</label>
+                <input type="text" id="prop-level-seed" class="form-input" placeholder="Boş bırakılırsa rastgele tohum üretilir">
+              </div>
+
+              <!-- Switches Row -->
+              <div class="form-switches-grid full-width">
+                <div class="switch-box">
+                  <div>
+                    <strong>Online Mode (Crack / TLauncher Desteği)</strong>
+                    <p>Orijinal olmayan oyuncuların girebilmesi için KAPALI olmalıdır.</p>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" id="prop-online-mode">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+
+                <div class="switch-box">
+                  <div>
+                    <strong>PvP (Oyuncular Arası Savaş)</strong>
+                    <p>Oyuncuların birbirine hasar verebilmesi.</p>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" id="prop-pvp" checked>
+                    <span class="slider"></span>
+                  </label>
+                </div>
+
+                <div class="switch-box">
+                  <div>
+                    <strong>Hardcore Modu</strong>
+                    <p>Ölen oyuncular izleyici (spectator) moduna geçer.</p>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" id="prop-hardcore">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+
+                <div class="switch-box">
+                  <div>
+                    <strong>Canavarlar (Spawn Monsters)</strong>
+                    <p>Zombi, iskelet ve creeper'ların dünyada doğması.</p>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" id="prop-spawn-monsters" checked>
+                    <span class="slider"></span>
+                  </label>
+                </div>
+
+                <div class="switch-box">
+                  <div>
+                    <strong>Hayvanlar (Spawn Animals)</strong>
+                    <p>İnek, koyun, at ve dost canlıların doğması.</p>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" id="prop-spawn-animals" checked>
+                    <span class="slider"></span>
+                  </label>
+                </div>
+
+                <div class="switch-box">
+                  <div>
+                    <strong>Köylüler & NPC'ler (Spawn NPCs)</strong>
+                    <p>Köylülerin ve ticaret NPC'lerinin dünyada yer alması.</p>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" id="prop-spawn-npcs" checked>
+                    <span class="slider"></span>
+                  </label>
+                </div>
+
+                <div class="switch-box">
+                  <div>
+                    <strong>Yapı Üretimi (Generate Structures)</strong>
+                    <p>Köyler, zindanlar, tapınaklar ve kalelerin oluşması.</p>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" id="prop-generate-structures" checked>
+                    <span class="slider"></span>
+                  </label>
+                </div>
+
+                <div class="switch-box">
+                  <div>
+                    <strong>Komut Blokları (Command Blocks)</strong>
+                    <p>Komut bloklarının çalıştırılmasına izin ver.</p>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" id="prop-command-blocks" checked>
+                    <span class="slider"></span>
+                  </label>
+                </div>
+
+                <div class="switch-box">
+                  <div>
+                    <strong>Uçma İzni (Allow Flight)</strong>
+                    <p>Survival modda uçma hilesi/modu kullananların atılmasını engeller.</p>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" id="prop-allow-flight">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+
+                <div class="switch-box">
+                  <div>
+                    <strong>Nether Boyutu (Allow Nether)</strong>
+                    <p>Nether portalı ve cehennem dünyasını aktif eder.</p>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" id="prop-allow-nether" checked>
+                    <span class="slider"></span>
+                  </label>
+                </div>
+
+                <div class="switch-box">
+                  <div>
+                    <strong>Whitelist (Beyaz Liste)</strong>
+                    <p>Sadece izin verilen oyuncuların girebilmesi.</p>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" id="prop-whitelist">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+
+                <div class="switch-box">
+                  <div>
+                    <strong>Zorunlu Oyun Modu (Force Gamemode)</strong>
+                    <p>Oyuncuların her girişte varsayılan modda başlaması.</p>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" id="prop-force-gamemode">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="properties-actions full-width">
+                <button type="submit" class="btn btn-primary btn-lg btn-glow">💾 Oyun Ayarlarını Kaydet</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Subtab 2: RAM, Java & Performance Tuning -->
+          <div id="prop-performance-panel" class="subtab-panel">
+            <form id="form-ram-performance" class="properties-grid-form">
+              <div class="form-group full-width">
+                <h4>⚡ Sunucu RAM & Bellek Yapılandırması</h4>
+                <p class="section-desc">Sunucunun kullanacağı minimum ve maksimum RAM miktarını ve başlatma optimizasyonlarını belirleyin.</p>
+              </div>
+
+              <!-- Max RAM -->
+              <div class="form-group">
+                <div class="label-with-value">
+                  <label class="form-label" for="setting-max-ram">Maksimum RAM (-Xmx):</label>
+                  <span id="setting-max-ram-label" class="highlight-badge">4 GB RAM</span>
+                </div>
+                <input type="range" id="setting-max-ram" min="1" max="32" value="4" class="slider-input">
+                <div class="slider-ticks">
+                  <span>1 GB</span>
+                  <span>4 GB</span>
+                  <span>8 GB</span>
+                  <span>16 GB</span>
+                  <span>32 GB</span>
+                </div>
+              </div>
+
+              <!-- Min RAM -->
+              <div class="form-group">
+                <div class="label-with-value">
+                  <label class="form-label" for="setting-min-ram">Minimum Başlangıç RAM'i (-Xms):</label>
+                  <span id="setting-min-ram-label" class="highlight-badge">2 GB RAM</span>
+                </div>
+                <input type="range" id="setting-min-ram" min="1" max="16" value="2" class="slider-input">
+                <div class="slider-ticks">
+                  <span>1 GB</span>
+                  <span>2 GB</span>
+                  <span>4 GB</span>
+                  <span>8 GB</span>
+                  <span>16 GB</span>
+                </div>
+              </div>
+
+              <!-- Java Runtime -->
+              <div class="form-group full-width">
+                <label class="form-label" for="setting-java-path">Kullanılacak Java Çalışma Ortamı:</label>
+                <select id="setting-java-path" class="form-input form-select">
+                  <option value="auto">Otomatik Algıla (Önerilen Java 21)</option>
+                </select>
+              </div>
+
+              <!-- Presets -->
+              <div class="form-group full-width">
+                <label class="form-label">Hazır Performans & GC Optimizasyon Profili:</label>
+                <div class="core-selector-cards">
+                  <label class="core-card active" data-preset="aikar">
+                    <input type="radio" name="jvm-preset" value="aikar" checked>
+                    <div class="core-card-content">
+                      <div class="core-title">🚀 Aikar's Flags (Önerilen & Sıfır Lag)</div>
+                      <div class="core-desc">G1GC çöp toplayıcı duraklamalarını 200ms altına düşürür, TPS dalgalanmalarını sıfırlar.</div>
+                    </div>
+                  </label>
+
+                  <label class="core-card" data-preset="low_ram">
+                    <input type="radio" name="jvm-preset" value="low_ram">
+                    <div class="core-card-content">
+                      <div class="core-title">🍃 Düşük RAM Modu (2-4 GB)</div>
+                      <div class="core-desc">Düşük donanımlı bilgisayarlar için bellek tasarrufu odaklı bayraklar.</div>
+                    </div>
+                  </label>
+
+                  <label class="core-card" data-preset="modpack">
+                    <input type="radio" name="jvm-preset" value="modpack">
+                    <div class="core-card-content">
+                      <div class="core-title">🌋 Ağır Forge/Fabric Mod Paketi</div>
+                      <div class="core-desc">100+ modlu paketler için geniş paralel bellek tahsisi ve optimize önbellek.</div>
+                    </div>
+                  </label>
+
+                  <label class="core-card" data-preset="custom">
+                    <input type="radio" name="jvm-preset" value="custom">
+                    <div class="core-card-content">
+                      <div class="core-title">🛠️ Özel Argümanlar (Manuel)</div>
+                      <div class="core-desc">Aşağıdaki kutudan kendi Java başlatma bayraklarınızı girin.</div>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Custom JVM Arguments -->
+              <div class="form-group full-width">
+                <label class="form-label" for="setting-custom-jvm">Özel JVM Başlatma Bayrakları:</label>
+                <textarea id="setting-custom-jvm" class="form-input" style="height: 90px; font-family: 'Fira Code', monospace; font-size: 0.85rem;" spellcheck="false">-XX:+UseG1GC -XX:+ParallelRefProcEnabled -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions -XX:+DisableExplicitGC -XX:+AlwaysPreTouch</textarea>
+              </div>
+
+              <div class="form-switches-grid full-width">
+                <div class="switch-box">
+                  <div>
+                    <strong>Çökme Sonrası Otomatik Başlatma (Crash Recovery)</strong>
+                    <p>Sunucu beklenmedik şekilde kapanırsa paneli otomatik yeniden başlatmaya yönlendirir.</p>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" id="setting-auto-restart">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="properties-actions full-width">
+                <button type="submit" class="btn btn-primary btn-lg btn-glow">⚡ RAM & Performans Ayarlarını Kaydet</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Subtab 3: Modern Forge user_jvm_args.txt -->
+          <div id="prop-forge-jvm-panel" class="subtab-panel">
+            <div class="raw-editor-wrap">
+              <p class="section-desc">Modern Forge (1.17 - 1.20+) sunucularının kullandığı <code>server_data/user_jvm_args.txt</code> dosyasını doğrudan düzenleyin.</p>
+              <textarea id="forge-jvm-textarea" class="code-editor-textarea" spellcheck="false" placeholder="# -Xmx4G..."></textarea>
+              <div class="raw-actions-row">
+                <button id="btn-save-forge-jvm" class="btn btn-primary">user_jvm_args.txt Kaydet</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Subtab 4: Raw server.properties -->
+          <div id="prop-raw-panel" class="subtab-panel">
+            <div class="raw-editor-wrap">
+              <p class="section-desc">Tüm <code>server_data/server.properties</code> dosyasını doğrudan metin olarak düzenleyin.</p>
+              <textarea id="raw-properties-textarea" class="code-editor-textarea" spellcheck="false"></textarea>
+              <div class="raw-actions-row">
+                <button id="btn-save-raw-props" class="btn btn-primary">Ham Ayarları Kaydet</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 8: PLAYERS -->
+      <section id="tab-players" class="tab-content">
+        <div class="players-grid">
+          <!-- OP / Admins -->
+          <div class="card player-mgmt-card">
+            <div class="card-title-row">
+              <h4>👑 Yöneticiler (OP Listesi)</h4>
+            </div>
+            <div class="add-player-row">
+              <input type="text" id="input-new-op" class="form-input" placeholder="Oyuncu kullanıcı adı...">
+              <button id="btn-add-op" class="btn btn-primary">OP Yap</button>
+            </div>
+            <div class="player-mgmt-list" id="ops-list-container">
+              <div class="empty-state-small">Kayıtlı OP yöneticisi yok.</div>
+            </div>
+          </div>
+
+          <!-- Whitelist -->
+          <div class="card player-mgmt-card">
+            <div class="card-title-row">
+              <h4>📋 Beyaz Liste (Whitelist)</h4>
+            </div>
+            <div class="add-player-row">
+              <input type="text" id="input-new-whitelist" class="form-input" placeholder="Oyuncu kullanıcı adı...">
+              <button id="btn-add-whitelist" class="btn btn-primary">Listeye Ekle</button>
+            </div>
+            <div class="player-mgmt-list" id="whitelist-container">
+              <div class="empty-state-small">Whitelist boş.</div>
+            </div>
+          </div>
+
+          <!-- Bans -->
+          <div class="card player-mgmt-card">
+            <div class="card-title-row">
+              <h4>🚫 Yasaklı Oyuncular (Ban Listesi)</h4>
+            </div>
+            <div class="add-player-row">
+              <input type="text" id="input-new-ban" class="form-input" placeholder="Oyuncu kullanıcı adı...">
+              <button id="btn-add-ban" class="btn btn-danger">Yasakla (Ban)</button>
+            </div>
+            <div class="player-mgmt-list" id="bans-container">
+              <div class="empty-state-small">Yasaklı oyuncu yok.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 9: FILES & PLUGINS -->
+      <section id="tab-files" class="tab-content">
+        <div class="card files-card">
+          <div class="files-header">
+            <div class="breadcrumbs-row" id="file-breadcrumbs">
+              <span class="crumb-item" data-path="">server_data</span>
+            </div>
+            <div class="files-actions">
+              <label class="btn btn-sm btn-accent file-upload-btn">
+                <input type="file" id="file-upload-input" multiple style="display: none;">
+                <span>+ Dosya / Eklenti (.jar) Yükle</span>
+              </label>
+              <button id="btn-new-folder" class="btn btn-sm btn-outline">+ Yeni Klasör</button>
+              <button id="btn-refresh-files" class="btn btn-sm btn-outline">Yenile</button>
+            </div>
+          </div>
+
+          <div class="files-table-container">
+            <table class="files-table">
+              <thead>
+                <tr>
+                  <th>İsim</th>
+                  <th>Boyut</th>
+                  <th>Son Değiştirilme</th>
+                  <th class="text-right">İşlemler</th>
+                </tr>
+              </thead>
+              <tbody id="files-tbody">
+                <tr><td colspan="4" class="text-center">Dosyalar yükleniyor...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 10: BACKUPS -->
+      <section id="tab-backups" class="tab-content">
+        <div class="card backups-card">
+          <div class="card-title-row">
+            <div>
+              <h3>Dünya & Sunucu Yedekleri</h3>
+              <p class="section-desc">Sunucu dünyanızı tek tıkla `.zip` olarak yedekleyin veya geri yükleyin.</p>
+            </div>
+            <button id="btn-create-backup" class="btn btn-primary">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+              <span>Şimdi Yedek Oluştur</span>
+            </button>
+          </div>
+
+          <div class="backups-table-wrap">
+            <table class="files-table">
+              <thead>
+                <tr>
+                  <th>Yedek Dosyası</th>
+                  <th>Boyut</th>
+                  <th>Oluşturulma Tarihi</th>
+                  <th class="text-right">İşlemler</th>
+                </tr>
+              </thead>
+              <tbody id="backups-tbody">
+                <tr><td colspan="4" class="text-center">Yedekler yükleniyor...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- File Editor Modal -->
+  <div id="file-editor-modal" class="modal-backdrop" style="display: none;">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h4 id="editor-filename">Dosya Düzenle</h4>
+        <button id="btn-close-editor" class="btn-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <textarea id="file-editor-textarea" class="code-editor-textarea" spellcheck="false"></textarea>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-cancel-editor" class="btn btn-outline">İptal</button>
+        <button id="btn-save-file-editor" class="btn btn-primary">Değişiklikleri Kaydet</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="/js/sakura.js"></script>
+  <script src="/js/console.js"></script>
+  <script src="/js/playit.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>

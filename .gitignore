@@ -1,0 +1,31 @@
+# Bağımlılıklar (npm install ile otomatik yüklenir)
+node_modules/
+package-lock.json
+
+# Minecraft Sunucu Çalışma ve Kişisel Verileri (Otomatik oluşturulur / indirilir)
+# Dünyalar, kütüphaneler, modlar, loglar ve oyuncu kimlikleri repoya dahil edilmez
+server_data/*
+!server_data/.gitkeep
+
+# İkili Çalıştırılabilir Dosyalar (Panel arayüzünden otomatik indirilir)
+bin/*.exe
+bin/*.zip
+!bin/.gitkeep
+
+# Yedek Dosyaları
+backups/*
+!backups/.gitkeep
+
+# Günlük ve Geçici Dosyalar
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+
+# İşletim Sistemi ve Editör Dosyaları
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.vscode/
+.idea/

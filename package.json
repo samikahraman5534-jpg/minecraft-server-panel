@@ -1,0 +1,29 @@
+{
+  "name": "minecraft-server-web-panel",
+  "version": "1.0.0",
+  "description": "Modern Minecraft Server Web Management Panel with Playit.gg Tunneling",
+  "main": "server/app.js",
+  "scripts": {
+    "start": "node server/app.js",
+    "dev": "node --watch server/app.js"
+  },
+  "dependencies": {
+    "adm-zip": "^0.5.16",
+    "archiver": "^7.0.1",
+    "axios": "^1.7.9",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "multer": "^1.4.5-lts.1",
+    "pidusage": "^3.0.2",
+    "ws": "^8.18.0"
+  },
+  "keywords": [
+    "minecraft",
+    "server",
+    "web-panel",
+    "playit-gg",
+    "dashboard"
+  ],
+  "author": "Sami Kahraman",
+  "license": "MIT"
+}
