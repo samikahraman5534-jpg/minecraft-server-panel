@@ -916,9 +916,48 @@ class MinecraftApp {
 
     const motdInput = document.getElementById('prop-motd');
     const motdPreview = document.getElementById('motd-preview');
+
+    const updateMotdPreview = () => {
+      if (!motdPreview || !motdInput) return;
+      const val = motdInput.value.trim();
+      if (!val) {
+        motdPreview.innerHTML = '<span style="color: #ffffff;">A Minecraft Server</span>';
+        return;
+      }
+      motdPreview.innerHTML = window.consoleManager?.formatMinecraftColors(motdInput.value) || motdInput.value;
+    };
+
     if (motdInput && motdPreview) {
-      motdInput.addEventListener('input', () => {
-        motdPreview.innerHTML = window.consoleManager?.formatMinecraftColors(window.consoleManager.escapeHtml(motdInput.value)) || motdInput.value;
+      motdInput.addEventListener('input', updateMotdPreview);
+
+      // Color and style buttons insertion into cursor position
+      document.querySelectorAll('.color-pill, .style-pill').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          const code = btn.getAttribute('data-code');
+          if (!code) return;
+
+          const start = motdInput.selectionStart ?? motdInput.value.length;
+          const end = motdInput.selectionEnd ?? motdInput.value.length;
+          const text = motdInput.value;
+
+          motdInput.value = text.substring(0, start) + code + text.substring(end);
+          motdInput.focus();
+          motdInput.selectionStart = motdInput.selectionEnd = start + code.length;
+          updateMotdPreview();
+        });
+      });
+
+      // Preset MOTD templates
+      document.querySelectorAll('.btn-preset-motd').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          const template = btn.getAttribute('data-template');
+          if (!template) return;
+          motdInput.value = template;
+          motdInput.focus();
+          updateMotdPreview();
+        });
       });
     }
 
@@ -1005,7 +1044,7 @@ class MinecraftApp {
         setVal('prop-motd', p['motd'] || '');
         const motdPreview = document.getElementById('motd-preview');
         if (motdPreview && p['motd']) {
-          motdPreview.innerHTML = window.consoleManager?.formatMinecraftColors(window.consoleManager.escapeHtml(p['motd'])) || p['motd'];
+          motdPreview.innerHTML = window.consoleManager?.formatMinecraftColors(p['motd']) || p['motd'];
         }
 
         setVal('prop-port', p['server-port'] || '25565');

@@ -1550,24 +1550,181 @@ input:checked + .slider:before {
   grid-column: span 2;
 }
 
-.motd-preview-box {
-  margin-top: 8px;
-  padding: 10px 14px;
-  background: #080410;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border-color);
+/* MOTD Visual Builder */
+.motd-builder-container {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(244, 114, 182, 0.15);
+  border-radius: var(--radius-md);
+  padding: 16px;
 }
 
-.motd-preview-label {
+.motd-builder-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.motd-presets-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.preset-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-right: 4px;
+}
+
+.btn-preset-motd {
+  background: rgba(244, 114, 182, 0.1);
+  border: 1px solid rgba(244, 114, 182, 0.25);
+  color: var(--text-main);
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-preset-motd:hover {
+  background: var(--accent-color);
+  color: #fff;
+  border-color: var(--accent-color);
+  transform: translateY(-1px);
+}
+
+.motd-color-toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  margin-bottom: 10px;
+}
+
+.color-palette-group,
+.style-palette-group {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.palette-title {
   font-size: 0.72rem;
-  color: var(--text-dim);
-  display: block;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-right: 4px;
+  min-width: 45px;
+}
+
+.color-pill {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 3px 7px;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.color-pill:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+}
+
+.style-pill {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  border-radius: 4px;
+  font-size: 0.72rem;
+  padding: 3px 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.style-pill:hover {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: var(--accent-color);
+}
+
+.motd-input-wrap {
+  margin-bottom: 12px;
+}
+
+/* Realistic Minecraft Server List Item Preview */
+.mc-server-card-preview {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: #110d18;
+  border: 2px solid #2d2438;
+  border-radius: 6px;
+  padding: 12px 14px;
+  box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.7);
+}
+
+.mc-server-icon {
+  width: 48px;
+  height: 48px;
+  background: #1e1528;
+  border: 1px solid #3d2f4d;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.mc-server-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.mc-server-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 4px;
 }
 
-.motd-preview-text {
-  font-family: 'Fira Code', monospace;
-  font-size: 0.88rem;
+.mc-server-default-name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #f1f5f9;
+  letter-spacing: 0.3px;
+}
+
+.mc-server-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.78rem;
+  color: #94a3b8;
+}
+
+.mc-ping-bars {
+  color: #10b981;
+  font-weight: 600;
+}
+
+.mc-server-motd-lines {
+  font-family: 'Fira Code', 'Courier New', monospace;
+  font-size: 0.92rem;
+  line-height: 1.45;
+  word-break: break-word;
+  white-space: pre-wrap;
+  min-height: 24px;
 }
 
 .form-switches-grid {

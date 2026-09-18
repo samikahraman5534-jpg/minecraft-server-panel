@@ -683,12 +683,75 @@
           <!-- Subtab 1: Visual Gameplay Settings -->
           <div id="prop-visual-panel" class="subtab-panel active">
             <form id="form-visual-properties" class="properties-grid-form">
-              <div class="form-group full-width">
-                <label class="form-label" for="prop-motd">Sunucu Başlığı (MOTD):</label>
-                <input type="text" id="prop-motd" class="form-input" placeholder="Sunucu listesinde görünecek renkli yazı (&a, &b kodları desteklenir)...">
-                <div class="motd-preview-box">
-                  <span class="motd-preview-label">Canlı Önizleme:</span>
-                  <div id="motd-preview" class="motd-preview-text">A Minecraft Server</div>
+              <div class="form-group full-width motd-builder-container">
+                <div class="motd-builder-header">
+                  <div>
+                    <label class="form-label" for="prop-motd">🎮 Sunucu Adı & Renkli Karşılama Mesajı (MOTD):</label>
+                    <p class="section-desc" style="margin-bottom: 8px;">Minecraft çok oyunculu sunucu listesinde görünen renkli başlıktır. İstediğiniz rengi veya kalınlığı butonlara basarak tek tıkla ekleyebilirsiniz.</p>
+                  </div>
+                  <div class="motd-presets-row">
+                    <span class="preset-label">Hazır Şablonlar:</span>
+                    <button type="button" class="btn-preset-motd" data-template="&d🌸 Sakura Survival &7| &a[1.20.1]\n&eEğlence, Macera ve Klanlar!">🌸 Sakura</button>
+                    <button type="button" class="btn-preset-motd" data-template="&c⚔️ KLAN SAVAŞLARI &7» &6PvP & Factions\n&b[1.20.1] &aAktif Sunucu!">⚔️ Klan/PvP</button>
+                    <button type="button" class="btn-preset-motd" data-template="&a💎 Klasik Vanilla SMP &7[Survival]\n&fArkadaşlarınla Hemen Katıl!">💎 Vanilla</button>
+                  </div>
+                </div>
+
+                <!-- Renk ve Biçimlendirme Paleti Araç Çubuğu -->
+                <div class="motd-color-toolbar">
+                  <div class="color-palette-group">
+                    <span class="palette-title">Renkler:</span>
+                    <button type="button" class="color-pill" data-code="&4" style="background:#aa0000;" title="&4 Koyu Kırmızı">Kırmızı</button>
+                    <button type="button" class="color-pill" data-code="&c" style="background:#ff5555;" title="&c Parlak Kırmızı">Açık Kırmızı</button>
+                    <button type="button" class="color-pill" data-code="&6" style="background:#ffaa00;" title="&6 Altın">Altın</button>
+                    <button type="button" class="color-pill" data-code="&e" style="background:#ffff55; color:#111;" title="&e Sarı">Sarı</button>
+                    <button type="button" class="color-pill" data-code="&2" style="background:#00aa00;" title="&2 Koyu Yeşil">Koyu Yeşil</button>
+                    <button type="button" class="color-pill" data-code="&a" style="background:#55ff55; color:#111;" title="&a Parlak Yeşil">Yeşil</button>
+                    <button type="button" class="color-pill" data-code="&b" style="background:#55ffff; color:#111;" title="&b Elmas Turkuaz">Aqua</button>
+                    <button type="button" class="color-pill" data-code="&3" style="background:#00aaaa;" title="&3 Deniz Mavisi">Koyu Aqua</button>
+                    <button type="button" class="color-pill" data-code="&1" style="background:#0000aa;" title="&1 Lacivert">Lacivert</button>
+                    <button type="button" class="color-pill" data-code="&9" style="background:#5555ff;" title="&9 Mavi">Mavi</button>
+                    <button type="button" class="color-pill" data-code="&d" style="background:#ff55ff;" title="&d Pembe">Pembe</button>
+                    <button type="button" class="color-pill" data-code="&5" style="background:#aa00aa;" title="&5 Mor">Mor</button>
+                    <button type="button" class="color-pill" data-code="&f" style="background:#ffffff; color:#111;" title="&f Beyaz">Beyaz</button>
+                    <button type="button" class="color-pill" data-code="&7" style="background:#aaaaaa; color:#111;" title="&7 Açık Gri">Açık Gri</button>
+                    <button type="button" class="color-pill" data-code="&8" style="background:#555555;" title="&8 Gri">Gri</button>
+                    <button type="button" class="color-pill" data-code="&0" style="background:#000000; border-color:#555;" title="&0 Siyah">Siyah</button>
+                  </div>
+                  <div class="style-palette-group">
+                    <span class="palette-title">Biçim:</span>
+                    <button type="button" class="style-pill" data-code="&l" title="&l Kalın Yazı"><strong>Kalın (&l)</strong></button>
+                    <button type="button" class="style-pill" data-code="&o" title="&o İtalik Yazı"><em>İtalik (&o)</em></button>
+                    <button type="button" class="style-pill" data-code="&n" title="&n Altı Çizili"><u>Altı Çizili (&n)</u></button>
+                    <button type="button" class="style-pill" data-code="&r" title="&r Rengi Sıfırla">Sıfırla (&r)</button>
+                    <button type="button" class="style-pill" data-code="\n" title="İkinci Satıra Geçiş">↵ 2. Satır</button>
+                  </div>
+                </div>
+
+                <div class="motd-input-wrap">
+                  <input type="text" id="prop-motd" class="form-input" placeholder="Örn: &d🌸 Sunucuma Hoş Geldiniz &7| &a[1.20.1]">
+                </div>
+
+                <!-- Canlı Minecraft Çok Oyunculu Sunucu Görünümü -->
+                <div class="mc-server-card-preview">
+                  <div class="mc-server-icon">
+                    <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.8">
+                      <rect x="2" y="2" width="20" height="20" rx="3" fill="#10b981" fill-opacity="0.2" stroke="#10b981" />
+                      <path d="M7 8h10M7 12h10M7 16h6" stroke="#10b981" stroke-linecap="round" />
+                    </svg>
+                  </div>
+                  <div class="mc-server-details">
+                    <div class="mc-server-title-row">
+                      <span class="mc-server-default-name">Minecraft Sunucusu</span>
+                      <div class="mc-server-meta">
+                        <span class="mc-ping-bars" title="5 ms (Mükemmel Sinyal)">📶 5/5</span>
+                        <span class="mc-player-count">0/20</span>
+                      </div>
+                    </div>
+                    <div id="motd-preview" class="mc-server-motd-lines">
+                      <span style="color: #ffffff;">A Minecraft Server</span>
+                    </div>
+                  </div>
                 </div>
               </div>
 

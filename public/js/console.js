@@ -93,25 +93,69 @@ class ConsoleManager {
   }
 
   formatMinecraftColors(str) {
-    const mcColorMap = {
-      '§0': '#000000', '§1': '#0000AA', '§2': '#00AA00', '§3': '#00AAAA',
-      '§4': '#AA0000', '§5': '#AA00AA', '§6': '#FFAA00', '§7': '#AAAAAA',
-      '§8': '#555555', '§9': '#5555FF', '§a': '#55FF55', '§b': '#55FFFF',
-      '§c': '#FF5555', '§d': '#FF55FF', '§e': '#FFFF55', '§f': '#FFFFFF',
-      '&0': '#000000', '&1': '#0000AA', '&2': '#00AA00', '&3': '#00AAAA',
-      '&4': '#AA0000', '&5': '#AA00AA', '&6': '#FFAA00', '&7': '#AAAAAA',
-      '&8': '#555555', '&9': '#5555FF', '&a': '#55FF55', '&b': '#55FFFF',
-      '&c': '#FF5555', '&d': '#FF55FF', '&e': '#FFFF55', '&f': '#FFFFFF'
+    if (!str) return '';
+    const colorHex = {
+      '0': '#1e1e1e', '1': '#0000aa', '2': '#00aa00', '3': '#00aaaa',
+      '4': '#aa0000', '5': '#aa00aa', '6': '#ffaa00', '7': '#aaaaaa',
+      '8': '#555555', '9': '#5555ff', 'a': '#55ff55', 'b': '#55ffff',
+      'c': '#ff5555', 'd': '#ff55ff', 'e': '#ffff55', 'f': '#ffffff'
     };
 
-    let formatted = str;
-    for (const [code, hex] of Object.entries(mcColorMap)) {
-      const reg = new RegExp(code, 'g');
-      formatted = formatted.replace(reg, `<span style="color: ${hex}; font-weight: 500;">`);
+    let text = this.escapeHtml(str).replace(/\\n/g, '<br>').replace(/\n/g, '<br>');
+
+    let html = '';
+    let isBold = false;
+    let isItalic = false;
+    let isUnderline = false;
+    let isStrike = false;
+    let currentColor = '#ffffff';
+
+    const parts = text.split(/(&amp;|§|&)([0-9a-fk-or])/gi);
+
+    for (let i = 0; i < parts.length; i++) {
+      if (parts[i] === '&amp;' || parts[i] === '§' || parts[i] === '&') {
+        const code = (parts[i + 1] || '').toLowerCase();
+        i++;
+
+        if (colorHex[code]) {
+          currentColor = colorHex[code];
+          isBold = false;
+          isItalic = false;
+          isUnderline = false;
+          isStrike = false;
+        } else if (code === 'l') {
+          isBold = true;
+        } else if (code === 'o') {
+          isItalic = true;
+        } else if (code === 'n') {
+          isUnderline = true;
+        } else if (code === 'm') {
+          isStrike = true;
+        } else if (code === 'r') {
+          currentColor = '#ffffff';
+          isBold = false;
+          isItalic = false;
+          isUnderline = false;
+          isStrike = false;
+        }
+        continue;
+      }
+
+      const content = parts[i];
+      if (content) {
+        let style = `color: ${currentColor};`;
+        if (isBold) style += ' font-weight: bold;';
+        if (isItalic) style += ' font-style: italic;';
+        const decor = [];
+        if (isUnderline) decor.push('underline');
+        if (isStrike) decor.push('line-through');
+        if (decor.length) style += ` text-decoration: ${decor.join(' ')};`;
+
+        html += `<span style="${style}">${content}</span>`;
+      }
     }
-    // Close spans for §r / &r
-    formatted = formatted.replace(/(§r|&r)/g, '</span>');
-    return formatted;
+
+    return html || text;
   }
 
   escapeHtml(str) {
